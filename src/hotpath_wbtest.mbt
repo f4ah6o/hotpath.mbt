@@ -68,7 +68,6 @@ test "snapshot and report order are deterministic" {
   )
 }
 
-
 ///|
 test "report escapes label delimiters and escape marker" {
   let profiler = Profiler::new()
