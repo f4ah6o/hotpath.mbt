@@ -55,11 +55,7 @@ fn BaselineProfiler::record_ms(
 ///|
 test (b : @bench.T) {
   let baseline = BaselineProfiler::new()
-  b.bench(name="m0_aggregate_only", fn() {
-    baseline.record_ms("parse", 10L)
-  })
+  b.bench(name="m0_aggregate_only", fn() { baseline.record_ms("parse", 10L) })
   let profiler = Profiler::new()
-  b.bench(name="m1_bounded_histogram", fn() {
-    profiler.record_ms("parse", 10L)
-  })
+  b.bench(name="m1_bounded_histogram", fn() { profiler.record_ms("parse", 10L) })
 }
