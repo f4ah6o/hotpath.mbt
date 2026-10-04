@@ -67,3 +67,17 @@ test "snapshot and report order are deterministic" {
     content="hotpath.mbt\nlabel\tcalls\ttotal_ms\tavg_ms\tmin_ms\tmax_ms\nbeta\t2\t6\t3\t2\t4\nalpha\t1\t1\t1\t1\t1\n",
   )
 }
+
+
+///|
+test "report escapes label delimiters and escape marker" {
+  let profiler = Profiler::new()
+  profiler.record_ms("tab\tlabel", 1L)
+  profiler.record_ms("line\nlabel", 2L)
+  profiler.record_ms("carriage\rlabel", 3L)
+  profiler.record_ms("path\\leaf", 4L)
+  inspect(
+    profiler.render_text(),
+    content="hotpath.mbt\nlabel\tcalls\ttotal_ms\tavg_ms\tmin_ms\tmax_ms\ntab\\tlabel\t1\t1\t1\t1\t1\nline\\nlabel\t1\t2\t2\t2\t2\ncarriage\\rlabel\t1\t3\t3\t3\t3\npath\\\\leaf\t1\t4\t4\t4\t4\n",
+  )
+}
