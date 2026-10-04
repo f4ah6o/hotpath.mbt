@@ -128,12 +128,35 @@ pub fn Profiler::snapshot(self : Profiler) -> Array[Measurement] {
 }
 
 ///|
+fn escape_report_label(label : String) -> String {
+  let sb = StringBuilder()
+  for c in label {
+    if c == '\\' {
+      ignore(sb..write_char('\\').write_char('\\'))
+    } else if c == '\t' {
+      ignore(sb..write_char('\\').write_char('t'))
+    } else if c == '\r' {
+      ignore(sb..write_char('\\').write_char('r'))
+    } else if c == '\n' {
+      ignore(sb..write_char('\\').write_char('n'))
+    } else {
+      ignore(sb.write_char(c))
+    }
+  }
+  sb.to_string()
+}
+
+///|
 /// Render a compact deterministic text report.
+///
+/// Labels escape backslash, tab, carriage return, and newline so the
+/// tab-separated report remains unambiguous for line-oriented consumers.
 pub fn Profiler::render_text(self : Profiler) -> String {
   let mut out = "hotpath.mbt\nlabel\tcalls\ttotal_ms\tavg_ms\tmin_ms\tmax_ms\n"
   for row in self.snapshot() {
+    let label = escape_report_label(row.label)
     out = out +
-      "\{row.label}\t\{row.calls}\t\{row.total_ms}\t\{row.average_ms}\t\{row.min_ms}\t\{row.max_ms}\n"
+      "\{label}\t\{row.calls}\t\{row.total_ms}\t\{row.average_ms}\t\{row.min_ms}\t\{row.max_ms}\n"
   }
   out
 }
