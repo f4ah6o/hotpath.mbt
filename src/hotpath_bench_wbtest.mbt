@@ -8,11 +8,14 @@ priv struct BaselineAggregate {
 
 ///|
 fn BaselineAggregate::new() -> BaselineAggregate {
-  { calls: 0, total_ms: 0L, min_ms: 0L, max_ms: 0L }
+  { calls: 0, total_ms: 0L, min_ms: 0L, max_ms: 0L, }
 }
 
 ///|
-fn BaselineAggregate::record(self : BaselineAggregate, elapsed_ms : Int64) -> Unit {
+fn BaselineAggregate::record(
+  self : BaselineAggregate,
+  elapsed_ms : Int64,
+) -> Unit {
   if self.calls == 0 {
     self.calls = 1
     self.total_ms = elapsed_ms
