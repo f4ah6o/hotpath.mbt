@@ -1,3 +1,4 @@
+///|
 test "repeated labels aggregate" {
   let profiler = Profiler::new()
   profiler.record_ms("parse", 10L)
@@ -12,6 +13,7 @@ test "repeated labels aggregate" {
   inspect(rows[0].max_ms, content="20")
 }
 
+///|
 test "negative and zero durations are safe" {
   let profiler = Profiler::new()
   profiler.record_ms("clock", -5L)
@@ -23,6 +25,7 @@ test "negative and zero durations are safe" {
   inspect(row.max_ms, content="0")
 }
 
+///|
 test "nested measurements aggregate independently" {
   let profiler = Profiler::new()
   let tick = Ref::new(0L)
@@ -42,6 +45,7 @@ test "nested measurements aggregate independently" {
   inspect(rows[1].total_ms, content="30")
 }
 
+///|
 test "reset clears state" {
   let profiler = Profiler::new()
   profiler.record_ms("one", 1L)
@@ -49,6 +53,7 @@ test "reset clears state" {
   inspect(profiler.snapshot().length(), content="0")
 }
 
+///|
 test "snapshot and report order are deterministic" {
   let profiler = Profiler::new()
   profiler.record_ms("beta", 2L)
