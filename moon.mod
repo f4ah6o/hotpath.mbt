@@ -1,1 +1,3 @@
-name = "f4ah6o/hotpath"\n\nversion = "0.1.0"\n
+name = "f4ah6o/hotpath"
+
+version = "0.1.0"
