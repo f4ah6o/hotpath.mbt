@@ -36,21 +36,21 @@ Toolchain:
 
 - MoonBit `0.1.20260920`
 
-CI run #11:
+CI run #15:
 
 - `moon fmt --check` — PASS
 - `moon check --target all` — PASS
 - `moon test --target all` — PASS
-  - wasm: 9/9
-  - wasm-gc: 9/9
-  - js: 9/9
-  - native: 9/9
+  - wasm: 10/10
+  - wasm-gc: 10/10
+  - js: 10/10
+  - native: 10/10
 - `moon bench --target native` — PASS
-  - M0 aggregate-only: 2.80 ns ± 0.04 ns
-  - M1 bounded histogram: 6.66 ns ± 0.06 ns
+  - M0 aggregate-only: 5.33 ns ± 0.06 ns
+  - M1 bounded histogram: 7.58 ns ± 0.53 ns
   - 10 × 100000 runs for each benchmark
 
-The benchmark is a relative micro-benchmark intended to make distribution overhead visible in CI; it is not a cross-machine performance guarantee.
+The benchmark uses equivalent label lookup, duration clamping, and aggregate update paths in M0 and M1; the M1 path additionally maintains the bounded histogram. It is a relative micro-benchmark intended to make distribution overhead visible in CI, not a cross-machine performance guarantee.
 
 ## Follow-up
 
