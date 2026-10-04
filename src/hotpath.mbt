@@ -1,3 +1,4 @@
+///|
 const HISTOGRAM_BUCKETS : Int = 64
 
 ///|
@@ -183,7 +184,8 @@ pub fn Profiler::merge(self : Profiler, other : Profiler) -> Unit {
           target.max_ms = source.max_ms
         }
         for bucket in 0..<HISTOGRAM_BUCKETS {
-          target.buckets[bucket] = target.buckets[bucket] + source.buckets[bucket]
+          target.buckets[bucket] = target.buckets[bucket] +
+            source.buckets[bucket]
         }
         found = true
       }
@@ -248,24 +250,9 @@ pub fn Profiler::snapshot(self : Profiler) -> Array[Measurement] {
       min_ms: entry.min_ms,
       max_ms: entry.max_ms,
       average_ms: average,
-      p50_ms: histogram_percentile(
-        entry.buckets,
-        entry.calls,
-        50,
-        entry.max_ms,
-      ),
-      p95_ms: histogram_percentile(
-        entry.buckets,
-        entry.calls,
-        95,
-        entry.max_ms,
-      ),
-      p99_ms: histogram_percentile(
-        entry.buckets,
-        entry.calls,
-        99,
-        entry.max_ms,
-      ),
+      p50_ms: histogram_percentile(entry.buckets, entry.calls, 50, entry.max_ms),
+      p95_ms: histogram_percentile(entry.buckets, entry.calls, 95, entry.max_ms),
+      p99_ms: histogram_percentile(entry.buckets, entry.calls, 99, entry.max_ms),
     })
   }
   result
