@@ -16,11 +16,19 @@ jobs:
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
       - name: Toolchain
         run: moon version
+      - name: M2 host tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py'
       - name: Format
         run: moon fmt --check
       - name: Check all targets
         run: moon check --target all
       - name: Test all targets
         run: moon test --target all
+      - name: Check generated M2 build view
+        run: |
+          python3 hotpath view .
+          cd .hotpath/build-view
+          moon check --target all
+          moon test --target all
       - name: Benchmark M0 vs M1 overhead
         run: moon bench --target native

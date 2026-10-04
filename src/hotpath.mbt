@@ -299,3 +299,27 @@ pub fn Profiler::render_text(self : Profiler) -> String {
   }
   out
 }
+
+///|
+/// Shared profiler used by opt-in generated source instrumentation.
+let global_profiler : Profiler = Profiler::new()
+
+///|
+/// Return the shared profiler so instrumented applications can snapshot or
+/// render measurements after the measured work completes.
+pub fn global() -> Profiler {
+  global_profiler
+}
+
+///|
+/// Clear all measurements held by the shared instrumentation profiler.
+pub fn reset_global() -> Unit {
+  global_profiler.reset()
+}
+
+///|
+/// Measure one synchronous call using the shared profiler used by generated
+/// M2 source instrumentation.
+pub fn[T] measure_global(label : String, body : () -> T) -> T {
+  global_profiler.measure(label, body)
+}
