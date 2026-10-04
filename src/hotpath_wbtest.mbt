@@ -46,6 +46,11 @@ test "bounded histogram handles sparse and extreme distributions" {
 }
 
 ///|
+test "percentile rank avoids Int overflow" {
+  inspect(percentile_rank(2000000000, 99), content="1980000000")
+}
+
+///|
 test "repeated equal values keep exact percentile cap" {
   let profiler = Profiler::new()
   for _i in 0..<100 {
