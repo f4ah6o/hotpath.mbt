@@ -2,7 +2,7 @@
 
 MoonBit-first application profiling toolkit inspired by [pawurb/hotpath-rs](https://github.com/pawurb/hotpath-rs).
 
-The first slice provides a small, portable runtime for explicit scoped timing, deterministic aggregation, snapshots, reset hooks, and text reports. CPU/allocation sampling is intentionally left to profilers such as `moon-pprof`; future hotpath.mbt tooling will correlate those samples with application-level instrumentation.
+The runtime provides portable explicit scoped timing, deterministic aggregation, bounded distribution statistics, snapshots, merge/reset hooks, and text reports. CPU/allocation sampling is intentionally left to profilers such as `moon-pprof`; future hotpath.mbt tooling will correlate those samples with application-level instrumentation.
 
 ## Quick start
 
@@ -37,6 +37,8 @@ profiler.measure_with("fake", now, fn() { () }) |> ignore
 
 Durations are currently stored in milliseconds. The default clock uses `moonbitlang/core/env`. The aggregation core is clock-independent, so later target-specific monotonic/high-resolution adapters do not change the aggregate model.
 
+Each label also owns a fixed 64-counter logarithmic histogram. Distribution memory is therefore bounded independently of observation count. `p50_ms`, `p95_ms`, and `p99_ms` are deterministic bucket estimates capped by the observed maximum; raw samples are never retained. `Profiler::merge` combines both aggregate counters and histogram buckets while preserving deterministic label order.
+
 ## Current scope
 
 - explicit scoped timing via `Profiler::measure`
@@ -44,16 +46,20 @@ Durations are currently stored in milliseconds. The default clock uses `moonbitl
 - repeated-label aggregation
 - nested measurements
 - calls / total / min / max / integer average
+- bounded p50 / p95 / p99 estimates
+- deterministic profiler merge
 - stable insertion-order snapshots and text reports
 - deterministic reset/test hooks
+- M0-vs-M1 native micro-benchmark in CI
 
-Not yet implemented: source rewriting for `#hotpath.measure`, bounded percentiles, CPU/allocation correlation, JSON/Prometheus, CI regression policy, MCP, and HTTP/I/O/channel/lock adapters. These are tracked as repository-local design packets under `issues/`; GitHub Issues are intentionally not used.
+Not yet implemented: source rewriting for `#hotpath.measure`, CPU/allocation correlation, JSON/Prometheus, CI regression policy, MCP, and HTTP/I/O/channel/lock adapters. These are tracked as repository-local design packets under `issues/`; GitHub Issues are intentionally not used.
 
 ## Development
 
 ```sh
 moon check --target all
 moon test --target all
+moon bench --target native
 moon fmt --check
 ```
 

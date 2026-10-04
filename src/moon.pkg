@@ -2,4 +2,8 @@ import {
   "moonbitlang/core/env",
 }
 
+import {
+  "moonbitlang/core/bench",
+} for "wbtest"
+
 pkgtype(kind: "library")

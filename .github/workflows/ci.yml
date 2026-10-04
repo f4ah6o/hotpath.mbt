@@ -22,3 +22,5 @@ jobs:
         run: moon check --target all
       - name: Test all targets
         run: moon test --target all
+      - name: Benchmark M0 vs M1 overhead
+        run: moon bench --target native

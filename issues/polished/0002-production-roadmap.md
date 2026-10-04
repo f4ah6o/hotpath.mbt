@@ -53,7 +53,9 @@ M5 precedes CI/MCP consumers so they can depend on a versioned report schema. M3
 
 If a milestone expands into more than one independently testable/releasable change, split it into numbered child packets under `issues/open/` before implementation. The roadmap remains the dependency/acceptance umbrella.
 
-## M1 — bounded distribution statistics
+## M1 — bounded distribution statistics — done
+
+Implemented by PR #2 and recorded in `issues/done/0003-bounded-distribution-statistics.md`.
 
 ### Deliver
 
@@ -61,12 +63,12 @@ Add p50/p95/p99 using a bounded histogram or mergeable quantile sketch.
 
 ### Acceptance
 
-- [ ] memory ceiling is explicit and independent of observation count
-- [ ] merge semantics are defined and tested
-- [ ] deterministic behavior is tested on every supported MoonBit target
-- [ ] repeated equal values, sparse distributions, and extreme values are covered
-- [ ] snapshot/report APIs expose percentiles without retaining raw samples
-- [ ] overhead benchmark compares M1 against the M0 aggregate path
+- [x] memory ceiling is explicit and independent of observation count
+- [x] merge semantics are defined and tested
+- [x] deterministic behavior is tested on every supported MoonBit target
+- [x] repeated equal values, sparse distributions, and extreme values are covered
+- [x] snapshot/report APIs expose percentiles without retaining raw samples
+- [x] overhead benchmark compares M1 against the M0 aggregate path
 
 ## M2 — source instrumentation
 

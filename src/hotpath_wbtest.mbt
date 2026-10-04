@@ -11,6 +11,9 @@ test "repeated labels aggregate" {
   inspect(rows[0].average_ms, content="15")
   inspect(rows[0].min_ms, content="10")
   inspect(rows[0].max_ms, content="20")
+  inspect(rows[0].p50_ms, content="15")
+  inspect(rows[0].p95_ms, content="20")
+  inspect(rows[0].p99_ms, content="20")
 }
 
 ///|
@@ -23,6 +26,60 @@ test "negative and zero durations are safe" {
   inspect(row.total_ms, content="0")
   inspect(row.min_ms, content="0")
   inspect(row.max_ms, content="0")
+  inspect(row.p50_ms, content="0")
+  inspect(row.p95_ms, content="0")
+  inspect(row.p99_ms, content="0")
+}
+
+///|
+test "bounded histogram handles sparse and extreme distributions" {
+  let profiler = Profiler::new()
+  profiler.record_ms("sparse", 1L)
+  profiler.record_ms("sparse", 2L)
+  profiler.record_ms("sparse", 1024L)
+  profiler.record_ms("sparse", 9223372036854775807L)
+  let row = profiler.snapshot()[0]
+  inspect(row.calls, content="4")
+  inspect(row.p50_ms, content="3")
+  inspect(row.p95_ms, content="9223372036854775807")
+  inspect(row.p99_ms, content="9223372036854775807")
+}
+
+///|
+test "percentile rank avoids Int overflow" {
+  inspect(percentile_rank(2000000000, 99), content="1980000000")
+}
+
+///|
+test "repeated equal values keep exact percentile cap" {
+  let profiler = Profiler::new()
+  for _i in 0..<100 {
+    profiler.record_ms("same", 10L)
+  }
+  let row = profiler.snapshot()[0]
+  inspect(row.p50_ms, content="10")
+  inspect(row.p95_ms, content="10")
+  inspect(row.p99_ms, content="10")
+}
+
+///|
+test "merge combines aggregate and distribution state deterministically" {
+  let left = Profiler::new()
+  left.record_ms("shared", 1L)
+  left.record_ms("left-only", 4L)
+  let right = Profiler::new()
+  right.record_ms("shared", 8L)
+  right.record_ms("right-only", 2L)
+  left.merge(right)
+  let rows = left.snapshot()
+  inspect(rows.length(), content="3")
+  inspect(rows[0].label, content="shared")
+  inspect(rows[0].calls, content="2")
+  inspect(rows[0].total_ms, content="9")
+  inspect(rows[0].p50_ms, content="1")
+  inspect(rows[0].p95_ms, content="8")
+  inspect(rows[1].label, content="left-only")
+  inspect(rows[2].label, content="right-only")
 }
 
 ///|
@@ -64,7 +121,7 @@ test "snapshot and report order are deterministic" {
   inspect(rows[1].label, content="alpha")
   inspect(
     profiler.render_text(),
-    content="hotpath.mbt\nlabel\tcalls\ttotal_ms\tavg_ms\tmin_ms\tmax_ms\nbeta\t2\t6\t3\t2\t4\nalpha\t1\t1\t1\t1\t1\n",
+    content="hotpath.mbt\nlabel\tcalls\ttotal_ms\tavg_ms\tmin_ms\tmax_ms\tp50_ms\tp95_ms\tp99_ms\nbeta\t2\t6\t3\t2\t4\t3\t4\t4\nalpha\t1\t1\t1\t1\t1\t1\t1\t1\n",
   )
 }
 
@@ -77,6 +134,6 @@ test "report escapes label delimiters and escape marker" {
   profiler.record_ms("path\\leaf", 4L)
   inspect(
     profiler.render_text(),
-    content="hotpath.mbt\nlabel\tcalls\ttotal_ms\tavg_ms\tmin_ms\tmax_ms\ntab\\tlabel\t1\t1\t1\t1\t1\nline\\nlabel\t1\t2\t2\t2\t2\ncarriage\\rlabel\t1\t3\t3\t3\t3\npath\\\\leaf\t1\t4\t4\t4\t4\n",
+    content="hotpath.mbt\nlabel\tcalls\ttotal_ms\tavg_ms\tmin_ms\tmax_ms\tp50_ms\tp95_ms\tp99_ms\ntab\\tlabel\t1\t1\t1\t1\t1\t1\t1\t1\nline\\nlabel\t1\t2\t2\t2\t2\t2\t2\t2\ncarriage\\rlabel\t1\t3\t3\t3\t3\t3\t3\t3\npath\\\\leaf\t1\t4\t4\t4\t4\t4\t4\t4\n",
   )
 }
