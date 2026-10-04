@@ -9,7 +9,7 @@ priv struct BaselineMeasurementState {
 
 ///|
 priv struct BaselineProfiler {
-  mut entries : Array[BaselineMeasurementState]
+  entries : Array[BaselineMeasurementState]
 }
 
 ///|
