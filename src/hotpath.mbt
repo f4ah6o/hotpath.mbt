@@ -76,6 +76,14 @@ fn histogram_upper_bound(index : Int) -> Int64 {
 }
 
 ///|
+fn percentile_rank(calls : Int, percentile : Int) -> Int64 {
+  if calls <= 0 {
+    return 0L
+  }
+  (calls.to_int64() * percentile.to_int64() + 99L) / 100L
+}
+
+///|
 fn histogram_percentile(
   buckets : Array[Int],
   calls : Int,
@@ -85,11 +93,11 @@ fn histogram_percentile(
   if calls <= 0 {
     return 0L
   }
-  let target = (calls * percentile + 99) / 100
+  let target = percentile_rank(calls, percentile)
   let mut cumulative = 0
   for i in 0..<buckets.length() {
     cumulative = cumulative + buckets[i]
-    if cumulative >= target {
+    if cumulative.to_int64() >= target {
       let estimate = histogram_upper_bound(i)
       return if estimate > max_ms { max_ms } else { estimate }
     }
