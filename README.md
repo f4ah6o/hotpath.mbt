@@ -35,7 +35,7 @@ let now = fn() {
 profiler.measure_with("fake", now, fn() { () }) |> ignore
 ```
 
-Durations are currently stored in milliseconds. The default clock uses `moonbitlang/core/env`. The aggregation core is clock-independent, so later target-specific monotonic/high-resolution adapters do not change the report model.
+Durations are currently stored in milliseconds. The default clock uses `moonbitlang/core/env`. The aggregation core is clock-independent, so later target-specific monotonic/high-resolution adapters do not change the aggregate model.
 
 ## Current scope
 
@@ -47,7 +47,7 @@ Durations are currently stored in milliseconds. The default clock uses `moonbitl
 - stable insertion-order snapshots and text reports
 - deterministic reset/test hooks
 
-Not yet implemented: source rewriting for `#hotpath.measure`, bounded percentiles, CPU/allocation correlation, JSON/Prometheus, CI regression policy, MCP, and HTTP/I/O/channel/lock adapters. These are tracked as repository-local design packets under `issues/open/`; GitHub Issues are intentionally not used.
+Not yet implemented: source rewriting for `#hotpath.measure`, bounded percentiles, CPU/allocation correlation, JSON/Prometheus, CI regression policy, MCP, and HTTP/I/O/channel/lock adapters. These are tracked as repository-local design packets under `issues/`; GitHub Issues are intentionally not used.
 
 ## Development
 
@@ -57,4 +57,4 @@ moon test --target all
 moon fmt --check
 ```
 
-See `issues/open/` for architecture and milestone design.
+Issue packets move through `issues/open/`, `issues/polished/`, and `issues/done/`. See `issues/polished/0002-production-roadmap.md` for the production-ready roadmap.
