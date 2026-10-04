@@ -29,7 +29,7 @@ pub struct Profiler {
 
 ///|
 pub fn Profiler::new() -> Profiler {
-  { entries: [] }
+  { entries: [], }
 }
 
 ///|
@@ -102,11 +102,7 @@ pub fn[T] Profiler::measure(
   label : String,
   body : () -> T,
 ) -> T {
-  self.measure_with(
-    label,
-    fn() { @env.now().reinterpret_as_int64() },
-    body,
-  )
+  self.measure_with(label, fn() { @env.now().reinterpret_as_int64() }, body)
 }
 
 ///|
