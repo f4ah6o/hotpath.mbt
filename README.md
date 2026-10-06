@@ -37,6 +37,29 @@ profiler.measure_with("fake", now, fn() { () }) |> ignore
 
 Durations are currently stored in milliseconds. The default clock uses `moonbitlang/core/env`. The aggregation core is clock-independent, so later target-specific monotonic/high-resolution adapters do not change the aggregate model.
 
+### Opt-in nanosecond measurements
+
+For sub-millisecond application spans, use the separate `ProfilerNs` facade.
+The original `Profiler`, millisecond fields and report format are unchanged.
+
+```moonbit nocheck
+let profiler = @hotpath.ProfilerNs::new()
+let value = profiler.measure_ns_with("input.handle", monotonic_now_ns, () => work())
+println(profiler.render_text())
+```
+
+The caller must supply nonnegative monotonic nanosecond timestamps, check its
+actual clock resolution, and bound the label vocabulary. Nanoseconds are the
+storage unit; this API does not promise nanosecond clock accuracy or resolution.
+Backward/invalid clocks omit samples and increment `invalid_clock_samples`.
+`record_ns` rejects negative values. Totals saturate at Int64 maximum with an
+explicit `total_saturated` flag; excess calls at Int maximum are dropped and
+reported by `dropped_samples`. Reset clears data and diagnostics. Histogram
+percentiles remain bounded estimates. `ProfilerNs` is synchronous, not
+thread-safe, and does not retain raw samples, install a clock or subtract its
+instrumentation overhead. Capture bounded raw samples in the calling harness
+and measure that overhead separately when evaluating a regression.
+
 Each label also owns a fixed 64-counter logarithmic histogram. Distribution memory is therefore bounded independently of observation count. `p50_ms`, `p95_ms`, and `p99_ms` are deterministic bucket estimates capped by the observed maximum; raw samples are never retained. `Profiler::merge` combines both aggregate counters and histogram buckets while preserving deterministic label order.
 
 ## Current scope
