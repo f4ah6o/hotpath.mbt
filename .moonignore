@@ -1,2 +1,4 @@
-# Repository-local design packets are not part of the published library.
+# Repository-only notes, docs, and examples are not part of the published library.
 /issues/
+/docs/
+/examples/

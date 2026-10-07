@@ -93,6 +93,22 @@ Each label also owns a fixed 64-counter logarithmic histogram. Distribution memo
 
 Not yet implemented: source rewriting for `#hotpath.measure`, CPU/allocation correlation, JSON/Prometheus, CI regression policy, MCP, and HTTP/I/O/channel/lock adapters. These are tracked as repository-local design packets under `issues/`; GitHub Issues are intentionally not used.
 
+## Terminal report example
+
+The current text output is a compact, deterministic, tab-separated snapshot from `Profiler::render_text()`. It is not an interactive hotpath-rs-style terminal dashboard: there is no live TUI, CPU/allocation sampler, thread view, or boxed table yet.
+
+Run a small example that prints the existing public API's report:
+
+```sh
+moon run --target native examples/terminal_report -q
+```
+
+The example feeds fixed synthetic millisecond durations through `record_ms`, so its output is reproducible and illustrative only; it is not a measurement of the example's execution time. The `p50_ms`, `p95_ms`, and `p99_ms` columns are bounded estimates from the fixed logarithmic histogram. Raw observations are not retained, so these are not exact percentiles computed from a stored sample list.
+
+The screenshot below is an unedited capture of the cloud terminal window running this command. Only terminal tab stops were adjusted for readability (`tabs 12,20,31,40,49,58,67,76,85`); the rendered report headers and values are unchanged.
+
+![Terminal output from the reproducible report example](docs/images/terminal-report.jpg)
+
 ## Development
 
 ```sh
