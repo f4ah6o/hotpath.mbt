@@ -4,6 +4,22 @@ MoonBit-first application profiling toolkit inspired by [pawurb/hotpath-rs](http
 
 The runtime provides portable explicit scoped timing, deterministic aggregation, bounded distribution statistics, snapshots, merge/reset hooks, and text reports. CPU/allocation sampling is intentionally left to profilers such as `moon-pprof`; future hotpath.mbt tooling will correlate those samples with application-level instrumentation.
 
+## Installation
+
+Add version 0.1.0 of the module:
+
+```sh
+moon add f4ah6o/hotpath@0.1.0
+```
+
+Import the `src` package in the consuming package's `moon.pkg`:
+
+```moonbit
+import {
+  "f4ah6o/hotpath/src" @hotpath,
+}
+```
+
 ## Quick start
 
 ```moonbit
@@ -87,3 +103,7 @@ moon fmt --check
 ```
 
 Issue packets move through `issues/open/`, `issues/polished/`, and `issues/done/`. See `issues/polished/0002-production-roadmap.md` for the production-ready roadmap.
+
+## License
+
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
