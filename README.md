@@ -123,3 +123,27 @@ Issue packets move through `issues/open/`, `issues/polished/`, and `issues/done/
 ## License
 
 Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
+
+## Patch release from `latest`
+
+Move the `latest` tag to the current `main` commit and push it:
+
+```sh
+git switch main
+git pull --ff-only origin main
+git tag -f latest HEAD
+git push --force origin refs/tags/latest
+```
+
+The `latest` event runs the patch version bump, updates `moon.mod` (and
+the CLI version constant, when present), atomically pushes the version
+commit with a fixed `vX.Y.Z` tag, builds Linux x64/ARM64 and macOS ARM64
+assets, and publishes the versioned GitHub Release. `latest` is a trigger,
+not a Release tag.
+
+The workflow refuses stale main/tag targets or an existing version tag,
+and rerunning the same failed release reuses its tagged version commit.
+The token must be allowed to push to `main`; branch protection is not
+bypassed. Direct `vX.Y.Z` tag pushes are still supported when the tag
+matches the version recorded in `moon.mod`.
+
