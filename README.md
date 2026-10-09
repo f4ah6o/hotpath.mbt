@@ -124,26 +124,19 @@ Issue packets move through `issues/open/`, `issues/polished/`, and `issues/done/
 
 Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
 
-## Patch release from `latest`
+## Versioned native releases
 
-Move the `latest` tag to the current `main` commit and push it:
+Edit the `version` field in `moon.mod` to the intended SemVer version
+(e.g., `0.1.0` to `0.1.1`) and merge that change into `main`.
+The release workflow compares the previous and new **version values**, not
+just the file modification date. On a version increase it validates
+version consistency, builds three native platforms, then creates the
+immutable `vX.Y.Z` tag and GitHub Release for the matching commit.
+Other changes to `moon.mod` do not publish. Version downgrades fail.
 
-```sh
-git switch main
-git pull --ff-only origin main
-git tag -f latest HEAD
-git push --force origin refs/tags/latest
-```
+An explicitly pushed `vX.Y.Z` tag remains supported only when the tag
+matches `moon.mod`; the workflow never edits source versions or bumps
+versions on its own. Publishing requires successful binary builds and
+GitHub Actions permission to create a Release.
 
-The `latest` event runs the patch version bump, updates `moon.mod` (and
-the CLI version constant, when present), atomically pushes the version
-commit with a fixed `vX.Y.Z` tag, builds Linux x64/ARM64 and macOS ARM64
-assets, and publishes the versioned GitHub Release. `latest` is a trigger,
-not a Release tag.
-
-The workflow refuses stale main/tag targets or an existing version tag,
-and rerunning the same failed release reuses its tagged version commit.
-The token must be allowed to push to `main`; branch protection is not
-bypassed. Direct `vX.Y.Z` tag pushes are still supported when the tag
-matches the version recorded in `moon.mod`.
-
+The hotpath native example is distributed as `hotpath-report`; the Mooncakes library remains a separate dependency.
