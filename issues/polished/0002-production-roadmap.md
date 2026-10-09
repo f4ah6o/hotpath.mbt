@@ -53,6 +53,18 @@ M5 precedes CI/MCP consumers so they can depend on a versioned report schema. M3
 
 If a milestone expands into more than one independently testable/releasable change, split it into numbered child packets under `issues/open/` before implementation. The roadmap remains the dependency/acceptance umbrella.
 
+## OS sub-issues — 2026-10-07 (JST)
+
+The OS-specific clock/runtime work in M3 and support qualification evidence in M9 are split into these child packets:
+
+- [0005 — Windows runtime and support qualification](../open/0005-windows-runtime-qualification.md)
+- [0006 — Apple Silicon macOS runtime and support qualification](../open/0006-macos-arm64-runtime-qualification.md)
+- [0007 — Linux runtime and support qualification](../open/0007-linux-runtime-qualification.md)
+
+macOS support is Apple Silicon arm64 only; Intel/x86_64 macOS, universal binaries, and Rosetta compatibility are outside scope. Windows and Linux support is limited to explicitly qualified OS/architecture/runtime combinations.
+
+The portable aggregation/report core, shared timing/finalization and async/cancellation semantics, concurrency policy, shared tests, and all other milestone work remain in this parent. Child packets implement narrow OS adapters and provide evidence against the shared contracts. Completing an OS packet does not by itself complete M3/M9 or establish production readiness.
+
 ## M1 — bounded distribution statistics — done
 
 Implemented by PR #2 and recorded in `issues/done/0003-bounded-distribution-statistics.md`.
