@@ -6,10 +6,10 @@ The runtime provides portable explicit scoped timing, deterministic aggregation,
 
 ## Installation
 
-Add version 0.1.0 of the module:
+Add version 0.2.0 of the module:
 
 ```sh
-moon add f4ah6o/hotpath@0.1.0
+moon add f4ah6o/hotpath@0.2.0
 ```
 
 Import the `src` package in the consuming package's `moon.pkg`:
@@ -64,9 +64,16 @@ let value = profiler.measure_ns_with("input.handle", monotonic_now_ns, () => wor
 println(profiler.render_text())
 ```
 
-The caller must supply nonnegative monotonic nanosecond timestamps, check its
-actual clock resolution, and bound the label vocabulary. Nanoseconds are the
-storage unit; this API does not promise nanosecond clock accuracy or resolution.
+`measure_ns_with` accepts caller-supplied nonnegative monotonic nanosecond
+timestamps; check the source clock's actual resolution and bound the label
+vocabulary. Native POSIX builds also provide `measure_native_ns` and
+`native_clock_resolution_ns()`. They use `clock_gettime(CLOCK_MONOTONIC)` and
+`clock_getres(CLOCK_MONOTONIC)`, respectively. The clock has an arbitrary
+origin and is independent of wall-clock adjustments; its suspend behavior is
+defined by the operating system. Nanoseconds are the storage unit; neither API
+promises nanosecond accuracy or resolution. The native adapter is available on
+native POSIX targets, including macOS and Linux, and is omitted on Windows and
+JavaScript targets.
 Backward/invalid clocks omit samples and increment `invalid_clock_samples`.
 `record_ns` rejects negative values. Totals saturate at Int64 maximum with an
 explicit `total_saturated` flag; excess calls at Int maximum are dropped and
@@ -90,6 +97,7 @@ Each label also owns a fixed 64-counter logarithmic histogram. Distribution memo
 - stable insertion-order snapshots and text reports
 - deterministic reset/test hooks
 - M0-vs-M1 native micro-benchmark in CI
+- native POSIX monotonic nanosecond adapter and clock/measurement overhead benchmarks
 
 Not yet implemented: source rewriting for `#hotpath.measure`, CPU/allocation correlation, JSON/Prometheus, CI regression policy, MCP, and HTTP/I/O/channel/lock adapters. These are tracked as repository-local design packets under `issues/`; GitHub Issues are intentionally not used.
 
