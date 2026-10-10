@@ -2,3 +2,5 @@
 /issues/
 /docs/
 /examples/
+**/__pycache__/
+**/*.py[cod]

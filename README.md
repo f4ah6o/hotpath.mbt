@@ -6,10 +6,10 @@ The runtime provides portable explicit scoped timing, deterministic aggregation,
 
 ## Installation
 
-Add version 0.1.0 of the module:
+Add version 0.1.1 of the module:
 
 ```sh
-moon add f4ah6o/hotpath@0.1.0
+moon add f4ah6o/hotpath@0.1.1
 ```
 
 Import the `src` package in the consuming package's `moon.pkg`:
@@ -130,7 +130,7 @@ Edit the `version` field in `moon.mod` to the intended SemVer version
 (e.g., `0.1.0` to `0.1.1`) and merge that change into `main`.
 The release workflow compares the previous and new **version values**, not
 just the file modification date. On a version increase it validates
-version consistency, builds three native platforms, then creates the
+version consistency, builds four native platforms, then creates the
 immutable `vX.Y.Z` tag and GitHub Release for the matching commit.
 Other changes to `moon.mod` do not publish. Version downgrades fail.
 
@@ -139,4 +139,6 @@ matches `moon.mod`; the workflow never edits source versions or bumps
 versions on its own. Publishing requires successful binary builds and
 GitHub Actions permission to create a Release.
 
-The hotpath native example is distributed as `hotpath-report`; the Mooncakes library remains a separate dependency.
+The native example assets are named `hotpath-report-linux-x86_64`,
+`hotpath-report-linux-aarch64`, `hotpath-report-darwin-aarch64`, and
+`hotpath-report-windows-x86_64.exe`. The Mooncakes library remains a separate dependency.
