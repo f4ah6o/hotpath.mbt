@@ -18,7 +18,7 @@ from release_version import (
 class ReleaseVersionTests(unittest.TestCase):
     def _valid_release(self):
         return {
-            "tag_name": "v0.1.1",
+            "tag_name": "v0.2.1",
             "draft": False,
             "prerelease": False,
             "published_at": "2026-10-09T03:08:49Z",
@@ -49,7 +49,7 @@ class ReleaseVersionTests(unittest.TestCase):
         return inspect_release_api_response(
             self._response(200, release),
             request_exit_code,
-            "v0.1.1",
+            "v0.2.1",
             frozenset(
                 {
                     "hotpath-report-darwin-aarch64",
@@ -75,8 +75,8 @@ class ReleaseVersionTests(unittest.TestCase):
 
     def test_changed_version_triggers_release(self):
         self.assertEqual(
-            release_from_change('version = "0.1.0"\n', 'version = "0.2.0"\n'),
-            "v0.2.0",
+            release_from_change('version = "0.2.0"\n', 'version = "0.2.1"\n'),
+            "v0.2.1",
         )
 
     def test_dependency_change_does_not_trigger_release(self):
@@ -108,7 +108,7 @@ class ReleaseVersionTests(unittest.TestCase):
             inspect_release_api_response(
                 self._response(404, {"message": "Not Found"}),
                 1,
-                "v0.1.1",
+                "v0.2.1",
                 frozenset(),
             ),
             "missing",
@@ -117,7 +117,7 @@ class ReleaseVersionTests(unittest.TestCase):
             inspect_release_api_response(
                 self._response(404, {"message": "Not Found"}),
                 0,
-                "v0.1.1",
+                "v0.2.1",
                 frozenset(),
             )
 
@@ -126,7 +126,7 @@ class ReleaseVersionTests(unittest.TestCase):
             inspect_release_list_response(
                 json.dumps([[self._valid_release()]]),
                 0,
-                "v0.1.1",
+                "v0.2.1",
             )
 
 if __name__ == "__main__":

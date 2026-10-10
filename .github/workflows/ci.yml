@@ -43,3 +43,24 @@ jobs:
         run: moon test --target all
       - name: Benchmark native target
         run: moon bench --target native
+
+  macos-native:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Apple Silicon runner
+        run: test "$(uname -m)" = arm64
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Resolve dependencies
+        run: moon update
+      - name: Format
+        run: moon fmt --check
+      - name: Check native target
+        run: moon check --target native
+      - name: Test native target
+        run: moon test --target native
+      - name: Benchmark native clock overhead
+        run: moon bench --target native

@@ -79,6 +79,9 @@ jobs:
           moon install
       - name: Build MoonBit native executable
         run: moon build examples/terminal_report --target native --release
+      - name: Verify Darwin artifact architecture
+        if: matrix.platform == 'darwin-aarch64'
+        run: test "$(uname -m)" = arm64
       - name: Package raw release asset
         shell: bash
         run: |
