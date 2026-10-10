@@ -1,9 +1,9 @@
 ///|
-#cfg(all(target="native", not(platform="windows")))
+#cfg(target="native")
 extern "C" fn native_clock_now_ns() -> Int64 = "hotpath_native_clock_now_ns"
 
 ///|
-#cfg(all(target="native", not(platform="windows")))
+#cfg(target="native")
 extern "C" fn native_clock_get_resolution_ns() -> Int64 = "hotpath_native_clock_resolution_ns"
 
 ///|
@@ -12,18 +12,18 @@ extern "C" fn native_clock_get_resolution_ns() -> Int64 = "hotpath_native_clock_
 ///
 /// This is the operating system's advertised resolution, not a promise that
 /// every measurement changes by that amount.
-#cfg(all(target="native", not(platform="windows")))
+#cfg(target="native")
 pub fn native_clock_resolution_ns() -> Int64 {
   native_clock_get_resolution_ns()
 }
 
 ///|
-/// Measure a closure with the native monotonic clock on POSIX targets.
+/// Measure a closure with the native monotonic clock.
 ///
 /// The clock has an arbitrary origin and is independent of wall-clock changes.
 /// If either clock read fails, the closure still returns normally and the
 /// profiler records an invalid clock sample instead of inventing a duration.
-#cfg(all(target="native", not(platform="windows")))
+#cfg(target="native")
 pub fn[T] ProfilerNs::measure_native_ns(
   self : ProfilerNs,
   label : String,

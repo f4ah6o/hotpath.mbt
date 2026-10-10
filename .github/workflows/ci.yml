@@ -25,6 +25,25 @@ jobs:
       - name: Benchmark M0 vs M1 overhead
         run: moon bench --target native
 
+  windows:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ilammy/msvc-dev-cmd@v1
+      - uses: hustcer/setup-moonbit@v1
+      - name: Toolchain
+        run: moon version
+      - name: Resolve dependencies
+        run: moon update
+      - name: Format
+        run: moon fmt --check
+      - name: Check all targets
+        run: moon check --target all
+      - name: Test all targets
+        run: moon test --target all
+      - name: Benchmark native target
+        run: moon bench --target native
+
   macos-native:
     runs-on: macos-15
     steps:

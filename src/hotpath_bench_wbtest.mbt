@@ -61,7 +61,7 @@ test (b : @bench.T) {
 }
 
 ///|
-#cfg(all(target="native", not(platform="windows")))
+#cfg(target="native")
 test (b : @bench.T) {
   let profiler = ProfilerNs::new()
   b.bench(name="m2_native_clock_read", fn() { ignore(native_clock_now_ns()) })
