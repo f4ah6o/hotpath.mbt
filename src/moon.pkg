@@ -7,3 +7,7 @@ import {
 } for "wbtest"
 
 pkgtype(kind: "library")
+
+options(
+  "native-stub": [ "native_clock.c" ],
+)
